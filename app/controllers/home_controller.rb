@@ -68,11 +68,11 @@ class HomeController < ApplicationController
     }
     # 仮のdbを複製する
     BoardHold.all.each{|i| i.delete}
-    6.times{ |i|  BoardHold.create(height:Board.all[i].height,width:Board.all[i].width)}
+    6.times{ |i|  BoardHold.create(height:Board.all.sort[i].height,width:Board.all.sort[i].width)}
 
     @deck.deck.slice!(0,2)
     Player.all.size.times{|i|
-       player = Player.all[i]
+       player = Player.all.sort[i]
        player.hand = @deck.deck[0..9]
        player.save
        @deck.deck.slice!(0,10)
