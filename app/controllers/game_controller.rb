@@ -39,7 +39,7 @@ class GameController < ApplicationController
   def action_step2
       if HAND_ACTION[:name] != false && params[:action_step2] == "　"
 
-        borad = Board.all[(params[:height]).to_i]
+        borad = Board.all.soft[(params[:height]).to_i]
         borad.width[(params[:width]).to_i] = HAND_ACTION[:name]
         borad.save
 
@@ -65,12 +65,12 @@ class GameController < ApplicationController
          #次のターンの設定
          TURN[:count] += 1
          # 仮のdbを複製する
-         BoardHold.all.each{|i| i.delete}
+         BoardHold.all.soft.each{|i| i.delete}
          6.times{ |i|  BoardHold.create(height:Board.all[i].height,width:Board.all[i].width)}
 
        else
          #戻る処理
-         Board.all.each{|i| i.delete}
+         Board.all.soft.each{|i| i.delete}
          6.times{ |i|  Board.create(height:BoardHold.all[i].height,width:BoardHold.all[i].width)}
        end
        JUDGE[:maru]=0
