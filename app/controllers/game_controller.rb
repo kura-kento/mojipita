@@ -1,4 +1,6 @@
 class GameController < ApplicationController
+  before_action :otherplayers,{only:[:draw,:action_step1,:judge]}
+  before_action :turnplayer,{only:[:aggregate]}
   def top
      @wait= "#{WAIT[:player]},#{WAIT[:join]}"
      @deck = Deck.last.deck
@@ -14,6 +16,8 @@ class GameController < ApplicationController
      @numberofdecks = @deck.size
      @turn = TURN[:count]
      @action = HAND_ACTION[:name],HAND_ACTION[:position],BOARD_ACTION[:name],BOARD_ACTION[:position]
+
+     @player_id = Player.all.sort[(TURN[:count] % Player.all.size)].user_id
   end
 
   def draw
@@ -24,7 +28,7 @@ class GameController < ApplicationController
       deck.deck.slice!(0)
       deck.save
 
-        TURN[:count] += 1
+      TURN[:count] += 1
       redirect_to("/game_start/#{session[:user_id]}")
   end
 
@@ -78,7 +82,7 @@ class GameController < ApplicationController
     end
     redirect_to("/game_start/#{session[:user_id]}")
   end
-
+#確定
   def confirm
 
   end

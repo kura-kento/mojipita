@@ -6,4 +6,16 @@ class ApplicationController < ActionController::Base
   HOLD ={id: false}
   TURN = {count: 0}
   JUDGE={maru: 0,batu:0}
+  
+  def turnplayer
+    if Player.all.sort[(TURN[:count] % Player.all.size)].user_id == session[:user_id]
+      redirect_to("/game_start/#{session[:user_id]}")
+    end
+  end
+
+  def otherplayers
+    if Player.all.sort[(TURN[:count] % Player.all.size)].user_id != session[:user_id]
+      redirect_to("/game_start/#{session[:user_id]}")
+    end
+  end
 end

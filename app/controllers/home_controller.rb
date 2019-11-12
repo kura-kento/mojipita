@@ -78,5 +78,6 @@ class HomeController < ApplicationController
        @deck.deck.slice!(0,10)
     }
     @deck.save
+    
   end
 end

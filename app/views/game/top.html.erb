@@ -12,7 +12,6 @@
                       <input type="submit" name="action_step2" value="<%= @boards[height].width[width] %>" class="card">
                     <% end %>
                   </div>
-
                 </div>
             <% end %>
         </div>
@@ -36,23 +35,29 @@
     <p><%= name[1].size %>枚</p>
 <% end %>
 
-<%= form_tag("/draw") do %>
-    <input type="submit" name="" value="ドロー">
+<%if @player_id == session[:user_id] %>
+    <%= form_tag("/draw") do %>
+        <input type="submit" name="" value="ドロー">
+    <% end %>
+
+    <%= form_tag("/judge") do %>
+        <input type="submit" name="judge" value="判定">
+    <% end %>
+<% else %>
+
+    <%= form_tag("/aggregate") do %>
+        <input type="submit" name="aggregate" value="●">
+    <% end %>
+
+    <%= form_tag("/aggregate") do %>
+        <input type="submit" name="aggregate" value="×">
+    <% end %>
+
 <% end %>
 
 
-<%= form_tag("/aggregate") do %>
-    <input type="submit" name="aggregate" value="●">
-<% end %>
 
-<%= form_tag("/aggregate") do %>
-    <input type="submit" name="aggregate" value="×">
-<% end %>
 
 <%= form_tag("/confirm") do %>
     <input type="submit" name="confirm" value="確定！">
-<% end %>
-
-<%= form_tag("/judge") do %>
-    <input type="submit" name="judge" value="判定">
 <% end %>
