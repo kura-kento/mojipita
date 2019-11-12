@@ -2,11 +2,10 @@ class GameController < ApplicationController
   def top
      @wait= "#{WAIT[:player]},#{WAIT[:join]}"
      @deck = Deck.last.deck
-     @boards = Board.all
+     @boards = Board.all.sort
      @players_name=[]
-     players = Player.all.sort
-     players.size.times{|i|
-        @players_name << [players[i].name,players[i].hand]
+     Player.all.size.times{|i|
+        @players_name << [Player.all[i].name,Player.all[i].hand]
      }
      # 後で変更　更新しないように別枠で書く方がいい
      @player = Player.find_by(user_id: session[:user_id])
