@@ -39,10 +39,11 @@
     <%= form_tag("/draw") do %>
         <input type="submit" name="" value="ドロー">
     <% end %>
-
+    
     <%= form_tag("/judge") do %>
         <input type="submit" name="judge" value="判定">
     <% end %>
+
 <% else %>
 
     <%= form_tag("/aggregate") do %>
@@ -52,7 +53,6 @@
     <%= form_tag("/aggregate") do %>
         <input type="submit" name="aggregate" value="×">
     <% end %>
-
 <% end %>
 
 

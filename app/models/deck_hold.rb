@@ -1,0 +1,2 @@
+class DeckHold < ApplicationRecord
+end

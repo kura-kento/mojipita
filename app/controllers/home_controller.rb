@@ -24,6 +24,7 @@ class HomeController < ApplicationController
       WAIT[:player] = 0
       WAIT[:join] = 0
       Player.all.each{|i|i.delete}
+      Deck.all.each{|i| i.delete}
       Player.create(name: params[:name],user_id: session[:user_id])
       redirect_to("/setting")
     else
@@ -66,9 +67,6 @@ class HomeController < ApplicationController
           Board.create(width:"　　　　　　　　　　",height:i)
       end
     }
-    # 仮のdbを複製する
-    BoardHold.all.each{|i| i.delete}
-    6.times{ |i|  BoardHold.create(height:Board.all.sort[i].height,width:Board.all.sort[i].width)}
 
     @deck.deck.slice!(0,2)
     Player.all.size.times{|i|
@@ -78,6 +76,14 @@ class HomeController < ApplicationController
        @deck.deck.slice!(0,10)
     }
     @deck.save
-    
+
+    # 仮のdbを複製する
+    BoardHold.all.each{|i| i.delete}
+    6.times{ |i|  BoardHold.create(height:Board.all.sort[i].height,width:Board.all.sort[i].width)}
+    PlayerHold.all.each{|i| i.delete}
+    Player.all.size.times{ |i|  PlayerHold.create(name: Player.all.sort[i].name,user_id: Player.all.sort[i].user_id,hand: Player.all.sort[i].hand)}
+    DeckHold.all.each{|i| i.delete}
+    DeckHold.create(deck:Deck.last.deck)
+
   end
 end

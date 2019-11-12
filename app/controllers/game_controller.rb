@@ -28,6 +28,10 @@ class GameController < ApplicationController
       deck.deck.slice!(0)
       deck.save
 
+      #ホールドに再登録
+      DeckHold.all.each{|i| i.delete}
+      DeckHold.create(deck:Deck.last.deck)
+
       TURN[:count] += 1
       redirect_to("/game_start/#{session[:user_id]}")
   end
@@ -71,11 +75,19 @@ class GameController < ApplicationController
          # 仮のdbを複製する
          BoardHold.all.each{|i| i.delete}
          6.times{ |i|  BoardHold.create(height:Board.all.sort[i].height,width:Board.all.sort[i].width)}
-
+         PlayerHold.all.each{|i| i.delete}
+         Player.all.size.times{ |i|  PlayerHold.create(name: Player.all.sort[i].name,user_id: Player.all.sort[i].user_id,hand:Player.all.sort[i].hand)}
+         DeckHold.all.each{|i| i.delete}
+         DeckHold.create(deck:Deck.last.deck)
        else
          #戻る処理
          Board.all.each{|i| i.delete}
          6.times{ |i|  Board.create(height:BoardHold.all.sort[i].height,width:BoardHold.all.sort[i].width)}
+         Deck.all.each{|i| i.delete}
+         Deck.create(deck:DeckHold.last.deck)
+         Player.all.each{|i| i.delete}
+         PlayerHold.all.size.times{ |i|  Player.create(name: PlayerHold.all.sort[i].name,user_id: PlayerHold.all.sort[i].user_id,hand:PlayerHold.all.sort[i].hand)}
+
        end
        JUDGE[:maru]=0
        JUDGE[:batu]=0
