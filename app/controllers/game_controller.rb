@@ -4,8 +4,9 @@ class GameController < ApplicationController
      @deck = Deck.last.deck
      @boards = Board.all
      @players_name=[]
-     Player.all.size.times{|i|
-        @players_name << [Player.all[i].name,Player.all[i].hand]
+     players = Player.all.sort
+     players.size.times{|i|
+        @players_name << [players[i].name,players[i].hand]
      }
      # 後で変更　更新しないように別枠で書く方がいい
      @player = Player.find_by(user_id: session[:user_id])
