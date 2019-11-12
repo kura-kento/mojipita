@@ -1,0 +1,20 @@
+Rails.application.routes.draw do
+  get '/' => 'home#top'
+  get '/host_login' => 'home#host_login'
+  post '/host_login' => 'home#host_login_check'
+  get '/setting' => 'home#setting'
+  post '/setting' => 'home#setting_player'
+  post '/gerst_login' => 'home#gerst_login'
+  get '/wait_area' => 'home#wait_area'
+  post '/wait_area' => 'home#wait_area_check'
+  post '/board_set' => 'home#board_set'
+
+  get '/game_start/:user_id' => 'game#top'
+  post '/action_step1/:hand' => 'game#action_step1'
+  post '/action_step2/:height/:width' => 'game#action_step2'
+  post '/draw' => 'game#draw'
+  post '/judge' => 'game#judge'
+  post '/confirm' => 'game#confirm'
+  post '/aggregate' => 'game#aggregate'
+
+end

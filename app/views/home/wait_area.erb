@@ -1,0 +1,11 @@
+<%= @wait %>
+<%= form_tag("/wait_area") do %>
+    <input type="submit" name="" value="ゲームスタート">
+<% end %>
+
+
+<%if session[:user_id] == 0 %>
+    <%= form_tag("/board_set") do %>
+        <input type="submit" name="" value="ボードセット">
+    <% end %>
+<%end%>

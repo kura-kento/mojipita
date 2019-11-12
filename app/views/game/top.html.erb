@@ -1,0 +1,58 @@
+<%= @wait %>
+<%=@action %>
+<%= session[:user_id]%>
+<p>山札：<%=@numberofdecks%>枚</p>
+<div class="borad">
+    <% 6.times do |height|%>
+        <div class=height">
+            <% 10.times do |width|%>
+                <div class="width">
+                  <div class="card">
+                    <%= form_tag("/action_step2/#{height}/#{width}") do %>
+                      <input type="submit" name="action_step2" value="<%= @boards[height].width[width] %>" class="card">
+                    <% end %>
+                  </div>
+
+                </div>
+            <% end %>
+        </div>
+    <% end %>
+</div>
+
+<div class="hand">
+  <% @player.hand.size.times do |i| %>
+      <div class="card">
+          <%= form_tag("/action_step1/#{i}") do %>
+              <input type="submit" name="action_step1" value="<%= @player.hand[i] %>" class="card">
+          <% end %>
+      </div>
+  <% end %>
+</div>
+
+<p><%=@players_name[@turn % (@players_name.size)][0]%>のターン</p>
+
+<% @players_name.each do |name| %>
+    <%= name[0] %>
+    <p><%= name[1].size %>枚</p>
+<% end %>
+
+<%= form_tag("/draw") do %>
+    <input type="submit" name="" value="ドロー">
+<% end %>
+
+
+<%= form_tag("/aggregate") do %>
+    <input type="submit" name="aggregate" value="●">
+<% end %>
+
+<%= form_tag("/aggregate") do %>
+    <input type="submit" name="aggregate" value="×">
+<% end %>
+
+<%= form_tag("/confirm") do %>
+    <input type="submit" name="confirm" value="確定！">
+<% end %>
+
+<%= form_tag("/judge") do %>
+    <input type="submit" name="judge" value="判定">
+<% end %>
