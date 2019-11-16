@@ -112,6 +112,4 @@ class GameController < ApplicationController
     end
   end
 
-
-
 end

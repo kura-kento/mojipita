@@ -1,10 +1,5 @@
 $('#message').html('これが見える13？');
 
-$(function(){
-  setInterval(function(){
-    $('#board').html("<%= j (render 'top') %>");
-  },1000);
-});
 
-
+  $('#board').html("<%= j (render 'top') %>");
   $('#hand').html("<%= j (render 'top_hand')%>");
