@@ -37,14 +37,17 @@ class GameController < ApplicationController
   end
 
   def action_step1
+      @boards = Board.all.sort
       if HAND_ACTION[:name] == false
         HAND_ACTION[:name] = params[:action_step1]
         HAND_ACTION[:position] = (params[:hand]).to_i
       end
-      redirect_to("/game_start/#{session[:user_id]}")
+      page_update()
+      #redirect_to("/game_start/#{session[:user_id]}")
   end
 
   def action_step2
+
       if HAND_ACTION[:name] != false && params[:action_step2] == "　"
 
         borad = Board.all.sort[(params[:height]).to_i]
@@ -57,8 +60,11 @@ class GameController < ApplicationController
 
         HAND_ACTION[:name] = false
         HAND_ACTION[:position] = false
+        @player = Player.find_by(user_id: session[:user_id])
+        @boards = Board.all.sort
+        page_update()
       end
-        redirect_to("/game_start/#{session[:user_id]}")
+        #redirect_to("/game_start/#{session[:user_id]}")
   end
   #集計
   def aggregate
@@ -97,5 +103,14 @@ class GameController < ApplicationController
 #確定
   def confirm
 
+  end
+
+  def page_update
+    @player = Player.find_by(user_id: session[:user_id])
+    @boards = Board.all.sort
+    respond_to do |format|
+      format.html
+      format.js {render :page_update}
+    end
   end
 end

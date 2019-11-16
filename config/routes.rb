@@ -16,5 +16,5 @@ Rails.application.routes.draw do
   post '/judge' => 'game#judge'
   post '/confirm' => 'game#confirm'
   post '/aggregate' => 'game#aggregate'
-
+  post '/page_update' => 'game#page_update'
 end
