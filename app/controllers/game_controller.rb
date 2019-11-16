@@ -42,7 +42,11 @@ class GameController < ApplicationController
         HAND_ACTION[:name] = params[:action_step1]
         HAND_ACTION[:position] = (params[:hand]).to_i
       end
-      page_update()
+      @hand_number = (params[:hand]).to_i
+      respond_to do |format|
+        format.html
+        format.js
+      end
       #redirect_to("/game_start/#{session[:user_id]}")
   end
 
@@ -79,21 +83,10 @@ class GameController < ApplicationController
          #次のターンの設定
          TURN[:count] += 1
          # 仮のdbを複製する
-         BoardHold.all.each{|i| i.delete}
-         6.times{ |i|  BoardHold.create(height:Board.all.sort[i].height,width:Board.all.sort[i].width)}
-         PlayerHold.all.each{|i| i.delete}
-         Player.all.size.times{ |i|  PlayerHold.create(name: Player.all.sort[i].name,user_id: Player.all.sort[i].user_id,hand:Player.all.sort[i].hand)}
-         DeckHold.all.each{|i| i.delete}
-         DeckHold.create(deck:Deck.last.deck)
+         Backup()
        else
          #戻る処理
-         Board.all.each{|i| i.delete}
-         6.times{ |i|  Board.create(height:BoardHold.all.sort[i].height,width:BoardHold.all.sort[i].width)}
-         Deck.all.each{|i| i.delete}
-         Deck.create(deck:DeckHold.last.deck)
-         Player.all.each{|i| i.delete}
-         PlayerHold.all.size.times{ |i|  Player.create(name: PlayerHold.all.sort[i].name,user_id: PlayerHold.all.sort[i].user_id,hand:PlayerHold.all.sort[i].hand)}
-
+         Rollback()
        end
        JUDGE[:maru]=0
        JUDGE[:batu]=0
@@ -105,6 +98,11 @@ class GameController < ApplicationController
 
   end
 
+  def rollback
+    Rollback()
+    page_update()
+  end
+
   def page_update
     @player = Player.find_by(user_id: session[:user_id])
     @boards = Board.all.sort
@@ -113,4 +111,7 @@ class GameController < ApplicationController
       format.js {render :page_update}
     end
   end
+
+
+
 end

@@ -78,14 +78,9 @@ class HomeController < ApplicationController
     @deck.save
 
     # 仮のdbを複製する
-    BoardHold.all.each{|i| i.delete}
-    6.times{ |i|  BoardHold.create(height:Board.all.sort[i].height,width:Board.all.sort[i].width)}
-
-    PlayerHold.all.each{|i| i.delete}
-    Player.all.size.times{ |i|  PlayerHold.create(name: Player.all.sort[i].name,user_id: Player.all.sort[i].user_id,hand: Player.all.sort[i].hand)}
-
-    DeckHold.all.each{|i| i.delete}
-    DeckHold.create(deck:Deck.last.deck)
+    Backup()
+  #  DeckHold.all.each{|i| i.delete}
+  #  DeckHold.create(deck:Deck.last.deck)
 
   end
 end

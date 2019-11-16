@@ -4,7 +4,7 @@
 <p>山札：<%=@numberofdecks%>枚</p>
 <div class="board" id="board">
 
-  <% @boards.each do |board| %>
+  <% @boards.each_with_index do |board,height| %>
       <%= render 'game/board',board: board %>
   <% end %>
 </div>
@@ -29,6 +29,9 @@
         <input type="submit" name="judge" value="判定">
     <% end %>
 <br>
+    <%= form_tag("/rollback",remote: true) do %>
+        <input type="submit" name="rollback" value="やり直し">
+    <% end %>
 <% else %>
 
     <%= form_tag("/aggregate") do %>

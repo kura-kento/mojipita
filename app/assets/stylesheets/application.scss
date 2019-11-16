@@ -28,11 +28,14 @@
   width:40px;
   border: 1px solid #ddd;
   font-size:20px;
-  background-color: green;
+  background-color: rgb(95, 221, 75);
   float:left;
 }
 .hand{
   position:absolute;
   top:450px;
   left:100px;
+}
+.opacity{
+  opacity: 0.6;
 }
