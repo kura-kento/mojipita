@@ -1,10 +1,12 @@
 <a id ="message"><%= @wait %></a>
+
+<a id=logcount data-id="<%=@boardlog_last.id%>">ログ：<%=@boardlog_last.id%></a>
 <%=@action %>
 <%= session[:user_id]%>
 <p>山札：<%=@numberofdecks%>枚</p>
 <div class="board" id="board">
 
-  <% @boards.each_with_index do |board,height| %>
+  <% @boards.each do |board| %>
       <%= render 'game/board',board: board %>
   <% end %>
 </div>
@@ -21,6 +23,7 @@
 <% end %>
 
 <%if @player_id == session[:user_id] %>
+
     <%= form_tag("/draw") do %>
         <input type="submit" name="" value="ドロー">
     <% end %>
@@ -29,7 +32,7 @@
         <input type="submit" name="judge" value="判定">
     <% end %>
 <br>
-    <%= form_tag("/rollback",remote: true) do %>
+    <%= form_tag("/rollback/#{@boardlog_last.id}",remote: true) do %>
         <input type="submit" name="rollback" value="やり直し">
     <% end %>
 <% else %>

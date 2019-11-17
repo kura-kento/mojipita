@@ -1,6 +1,7 @@
 class GameController < ApplicationController
   before_action :otherplayers,{only:[:draw,:action_step1,:judge]}
   before_action :turnplayer,{only:[:aggregate]}
+
   def top
      @wait= "#{WAIT[:player]},#{WAIT[:join]}"
      @deck = Deck.last.deck
@@ -18,6 +19,12 @@ class GameController < ApplicationController
      @action = HAND_ACTION[:name],HAND_ACTION[:position],BOARD_ACTION[:name],BOARD_ACTION[:position]
 
      @player_id = Player.all.sort[(TURN[:count] % Player.all.size)].user_id
+
+     @boardlog_last = Boardlog.last
+     respond_to do |format|
+       format.html
+       format.json {@new_log = Boardlog.where('id > ?',params[:logid]) }
+     end
   end
 
   def draw
@@ -31,7 +38,7 @@ class GameController < ApplicationController
       #ホールドに再登録
       DeckHold.all.each{|i| i.delete}
       DeckHold.create(deck:Deck.last.deck)
-
+      Backup()
       TURN[:count] += 1
       redirect_to("/game_start/#{session[:user_id]}")
   end
@@ -41,8 +48,13 @@ class GameController < ApplicationController
       if HAND_ACTION[:name] == false
         HAND_ACTION[:name] = params[:action_step1]
         HAND_ACTION[:position] = (params[:hand]).to_i
+        @hand_number = (params[:hand]).to_i
+      #選択中の手札を押すと戻る
+      elsif HAND_ACTION[:name] == params[:action_step1]
+        HAND_ACTION[:name] = false
+        HAND_ACTION[:position]= false
+        @hand_number = (params[:hand]).to_i
       end
-      @hand_number = (params[:hand]).to_i
       respond_to do |format|
         format.html
         format.js
@@ -61,6 +73,8 @@ class GameController < ApplicationController
         player = Player.find_by(user_id: session[:user_id])
         player.hand.slice!(HAND_ACTION[:position])
         player.save
+
+        Boardlog.create(moji: HAND_ACTION[:name],height: (params[:height]).to_i,width: (params[:width]).to_i)
 
         HAND_ACTION[:name] = false
         HAND_ACTION[:position] = false
@@ -101,6 +115,7 @@ class GameController < ApplicationController
   def rollback
     Rollback()
     page_update()
+    Boardlog.where('id > ?',params[:loglast_id]).each{|i| i.delete}
   end
 
   def page_update

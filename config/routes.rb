@@ -17,5 +17,5 @@ Rails.application.routes.draw do
   post '/confirm' => 'game#confirm'
   post '/aggregate' => 'game#aggregate'
   post '/page_update' => 'game#page_update'
-  post '/rollback' => 'game#rollback'
+  post '/rollback/:loglast_id' => 'game#rollback'
 end

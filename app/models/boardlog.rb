@@ -1,0 +1,2 @@
+class Boardlog < ApplicationRecord
+end
