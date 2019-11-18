@@ -23,7 +23,7 @@ class HomeController < ApplicationController
       session[:user_id] = 0
       WAIT[:player] = 0
       WAIT[:join] = 0
-      Player.all.each{|i|i.delete}
+      Player.all.each{|i| i.delete}
       Deck.all.each{|i| i.delete}
       Player.create(name: params[:name],user_id: session[:user_id])
       redirect_to("/setting")
@@ -81,6 +81,5 @@ class HomeController < ApplicationController
     Backup()
   #  DeckHold.all.each{|i| i.delete}
   #  DeckHold.create(deck:Deck.last.deck)
-
   end
 end

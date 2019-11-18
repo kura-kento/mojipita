@@ -12,9 +12,9 @@ Rails.application.routes.draw do
   get '/game_start/:user_id' => 'game#top'
   post '/action_step1/:hand' => 'game#action_step1'
   post '/action_step2/:height/:width' => 'game#action_step2'
-  post '/draw' => 'game#draw'
+  post '/draw/:loglast_id' => 'game#draw'
   post '/judge' => 'game#judge'
-  post '/confirm' => 'game#confirm'
+
   post '/aggregate' => 'game#aggregate'
   post '/page_update' => 'game#page_update'
   post '/rollback/:loglast_id' => 'game#rollback'

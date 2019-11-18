@@ -2,7 +2,8 @@
   $(function(){
 
      function textadd(text,height,width){
-       $('#card_'+height+'_'+width).html(text);
+       $('#card_'+height+'_'+width).val(text);
+       $('#card_'+height+'_'+width).addClass('opacity')
 
      }
 

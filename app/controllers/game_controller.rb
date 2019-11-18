@@ -3,7 +3,6 @@ class GameController < ApplicationController
   before_action :turnplayer,{only:[:aggregate]}
 
   def top
-     @wait= "#{WAIT[:player]},#{WAIT[:join]}"
      @deck = Deck.last.deck
      @boards = Board.all.sort
      @players_name=[]
@@ -14,10 +13,9 @@ class GameController < ApplicationController
      @player = Player.find_by(user_id: session[:user_id])
      #@players_name.shuffle!
 
-     @numberofdecks = @deck.size
+     @number_of_decks = @deck.size
      @turn = TURN[:count]
-     @action = HAND_ACTION[:name],HAND_ACTION[:position],BOARD_ACTION[:name],BOARD_ACTION[:position]
-
+     #ターンプレイヤーのID
      @player_id = Player.all.sort[(TURN[:count] % Player.all.size)].user_id
 
      @boardlog_last = Boardlog.last
@@ -28,18 +26,17 @@ class GameController < ApplicationController
   end
 
   def draw
-      deck = Deck.last
-      player = Player.find_by(user_id: session[:user_id])
-      player.hand << deck.deck[0]
-      player.save
-      deck.deck.slice!(0)
-      deck.save
-
-      #ホールドに再登録
-      DeckHold.all.each{|i| i.delete}
-      DeckHold.create(deck:Deck.last.deck)
-      Backup()
-      TURN[:count] += 1
+      if params[:loglast_id].to_i == Boardlog.last.id
+          deck = Deck.last
+          player = Player.find_by(user_id: session[:user_id])
+          player.hand << deck.deck[0]
+          player.save
+          deck.deck.slice!(0)
+          deck.save
+          #ホールドに再登録
+          Backup()
+          TURN[:count] += 1
+      end
       redirect_to("/game_start/#{session[:user_id]}")
   end
 
@@ -66,7 +63,7 @@ class GameController < ApplicationController
 
       if HAND_ACTION[:name] != false && params[:action_step2] == "　"
 
-        borad = Board.all.sort[(params[:height]).to_i]
+        borad = Board.find_by(height: (params[:height]).to_i+1)
         borad.width[(params[:width]).to_i] = HAND_ACTION[:name]
         borad.save
 
@@ -86,9 +83,9 @@ class GameController < ApplicationController
   end
   #集計
   def aggregate
-      #現状一人で何回も推せる
+      #改善:どちらかを押したら両方押せなくしたい
       params[:aggregate] == "●" ? JUDGE[:maru] += 1 : JUDGE[:batu] += 1
-      redirect_to("/game_start/#{session[:user_id]}")
+      page_update()
   end
 
   def judge
@@ -107,15 +104,14 @@ class GameController < ApplicationController
     end
     redirect_to("/game_start/#{session[:user_id]}")
   end
-#確定
-  def confirm
 
-  end
 
   def rollback
     Rollback()
-    page_update()
+    HAND_ACTION[:name] = false
+    HAND_ACTION[:position]= false
     Boardlog.where('id > ?',params[:loglast_id]).each{|i| i.delete}
+    page_update()
   end
 
   def page_update

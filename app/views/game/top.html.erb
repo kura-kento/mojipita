@@ -1,9 +1,7 @@
-<a id ="message"><%= @wait %></a>
-
+<a id="message"></a>
 <a id=logcount data-id="<%=@boardlog_last.id%>">ログ：<%=@boardlog_last.id%></a>
-<%=@action %>
-<%= session[:user_id]%>
-<p>山札：<%=@numberofdecks%>枚</p>
+
+<p>山札：<%=@number_of_decks%>枚</p>
 <div class="board" id="board">
 
   <% @boards.each do |board| %>
@@ -22,35 +20,32 @@
     <p><%= name[1].size %>枚</p>
 <% end %>
 
-<%if @player_id == session[:user_id] %>
+    <%if @player_id == session[:user_id] %>
 
-    <%= form_tag("/draw") do %>
-        <input type="submit" name="" value="ドロー">
-    <% end %>
-<br>
-    <%= form_tag("/judge") do %>
-        <input type="submit" name="judge" value="判定">
-    <% end %>
-<br>
-    <%= form_tag("/rollback/#{@boardlog_last.id}",remote: true) do %>
-        <input type="submit" name="rollback" value="やり直し">
-    <% end %>
-<% else %>
+        <%= form_tag("/draw/#{@boardlog_last.id}") do %>
+            <input type="submit" name="" value="ドロー">
+        <% end %>
+    <br>
+        <%= form_tag("/judge") do %>
+            <input type="submit" name="judge" value="判定">
+        <% end %>
+    <br>
+        <%= form_tag("/rollback/#{@boardlog_last.id}",remote: true) do %>
+            <input type="submit" name="rollback" value="やり直し">
+        <% end %>
+    <% else %>
 
-    <%= form_tag("/aggregate") do %>
-        <input type="submit" name="aggregate" value="●">
+        <%= form_tag("/aggregate") do %>
+            <input type="submit" name="aggregate" value="●" onclick="this.disabled = true;">
+        <% end %>
+    <br>
+        <%= form_tag("/aggregate") do %>
+            <input type="submit" name="aggregate" value="×" onclick="this.disabled = true;">
+        <% end %>
     <% end %>
-<br>
-    <%= form_tag("/aggregate") do %>
-        <input type="submit" name="aggregate" value="×">
-    <% end %>
-<% end %>
+
+
 <br>
 <%= form_tag("/page_update",remote: true) do %>
     <input type="submit" name="page_update" value="ページ更新">
-<% end %>
-<br>
-
-<%= form_tag("/confirm") do %>
-    <input type="submit" name="confirm" value="確定！">
 <% end %>
