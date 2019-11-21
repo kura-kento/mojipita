@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   post '/board_set' => 'home#board_set'
 
   get '/game_start/:user_id' => 'game#top'
-  post '/action_step1/:hand' => 'game#action_step1'
+  post '/action_step1/:position' => 'game#action_step1'
   post '/action_step2/:height/:width' => 'game#action_step2'
   post '/draw/:loglast_id' => 'game#draw'
   post '/judge' => 'game#judge'

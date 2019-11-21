@@ -4,6 +4,8 @@ class CreatePlayers < ActiveRecord::Migration[5.2]
       t.text :name
       t.text :hand
       t.integer :user_id
+      t.string :word
+      t.string :position
       t.timestamps
     end
   end

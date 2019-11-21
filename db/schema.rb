@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 2019_11_17_072728) do
     t.string "moji"
     t.integer "height"
     t.integer "width"
+    t.integer "turn"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -58,6 +59,8 @@ ActiveRecord::Schema.define(version: 2019_11_17_072728) do
     t.text "name"
     t.text "hand"
     t.integer "user_id"
+    t.string "word"
+    t.string "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

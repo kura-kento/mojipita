@@ -4,7 +4,7 @@ class CreateBoardlogs < ActiveRecord::Migration[5.2]
       t.string :moji
       t.integer :height
       t.integer :width
-
+      t.integer :turn
       t.timestamps
     end
   end

@@ -1,12 +1,11 @@
-
-    <div class="height" >
-        <% 10.times do |width|%>
-            <div class="width">
-              <div class="card" id="<%="card_#{board.height-1}_#{width}"%>">
+<div class="height" >
+    <% 10.times do |width|%>
+        <div class="width">
+            <div class="" id="">
                 <%= form_tag("/action_step2/#{board.height-1}/#{width}",remote: true) do %>
-                  <input id="<%= "input_#{board.height-1}_#{width}"%>" type="submit" name="action_step2" value="<%= board.width[width] %>" class="card">
+                  <input id="<%= "input_#{board.height-1}_#{width}"%>" type="submit" name="action_step2" value="<%= board.width[width] %>" class="board_card card">
                 <% end %>
-              </div>
             </div>
-        <% end %>
-    </div>
+        </div>
+    <% end %>
+</div>

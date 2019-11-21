@@ -1,51 +1,46 @@
 <a id="message"></a>
-<a id=logcount data-id="<%=@boardlog_last.id%>">ログ：<%=@boardlog_last.id%></a>
+<a ><%=@player_0%></a>
+<a id="turncount" data-id="<%=@turn%>">ターン数:<%=@turn%></a>
+<a id="logcount" data-id="<%=@boardlog_last.id%>">ログ：<%=@boardlog_last.id%></a>
 
 <p>山札：<%=@number_of_decks%>枚</p>
 <div class="board" id="board">
-
-  <% @boards.each do |board| %>
-      <%= render 'game/board',board: board %>
-  <% end %>
+    <% @boards.each do |board| %>
+        <%= render 'game/board',board: board %>
+    <% end %>
 </div>
 
 <div class="hand" id="hand">
   <%= render 'game/hand', player: @player %>
 </div>
 
-<p><%=@players_name[@turn % (@players_name.size)][0]%>のターン</p>
+<p><%=@players[0].name%>のターン</p>
 
-<% @players_name.each do |name| %>
-    <%= name[0] %>
-    <p><%= name[1].size %>枚</p>
+<% @players.each do |player| %>
+    <%= player.name %>
+    <p><%= player.hand.size %>枚</p>
 <% end %>
 
-    <%if @player_id == session[:user_id] %>
-
-        <%= form_tag("/draw/#{@boardlog_last.id}") do %>
-            <input type="submit" name="" value="ドロー">
-        <% end %>
+    <%if @turn_player.user_id == session[:user_id] %>
+    <%= form_tag("/draw/#{@boardlog_last.id}",remote: true) do %>
+        <input type="submit" name="" value="ドロー">
+    <% end %>
     <br>
-        <%= form_tag("/judge") do %>
-            <input type="submit" name="judge" value="判定">
-        <% end %>
+    <%= form_tag("/judge") do %>
+        <input type="submit" name="judge" value="判定">
+    <% end %>
     <br>
-        <%= form_tag("/rollback/#{@boardlog_last.id}",remote: true) do %>
-            <input type="submit" name="rollback" value="やり直し">
-        <% end %>
-    <% else %>
-
-        <%= form_tag("/aggregate") do %>
-            <input type="submit" name="aggregate" value="●" onclick="this.disabled = true;">
-        <% end %>
-    <br>
-        <%= form_tag("/aggregate") do %>
-            <input type="submit" name="aggregate" value="×" onclick="this.disabled = true;">
-        <% end %>
+    <%= form_tag("/rollback/#{@boardlog_last.id}",remote: true) do %>
+        <input type="submit" name="rollback" value="やり直し">
     <% end %>
 
+    <% else %>
 
-<br>
-<%= form_tag("/page_update",remote: true) do %>
-    <input type="submit" name="page_update" value="ページ更新">
-<% end %>
+        <%= form_tag("/aggregate",remote: true) do %>
+            <input type="submit" name="aggregate" value="●">
+        <% end %>
+    <br>
+        <%= form_tag("/aggregate",remote: true) do %>
+            <input type="submit" name="aggregate" value="×">
+        <% end %>
+    <% end %>

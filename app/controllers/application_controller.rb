@@ -1,20 +1,21 @@
 class ApplicationController < ActionController::Base
-  WAIT = {player: 0,join: 0}
+  #確定
   MOJI = {moji: 'あいいいいううううえおかかききくくけここささしししすすせそたたちちつつてととなにぬねのはひふへほまみむめもやゆゆよららりりるるれろわんんんんーー'}
-  HAND_ACTION = {name: false,position: false}
   BOARD_ACTION = {name: false,position: false}
+  PLAYERS = {user_id: [0,124]}
+  #削除予定
+  WAIT = {player: 0,join: 0}
   HOLD ={id: false}
-  TURN = {count: 0}
-  JUDGE={maru: 0,batu:0}
+  JUDGE = {maru: 0,batu:0}
 
   def turnplayer
-    if Player.all.sort[(TURN[:count] % Player.all.size)].user_id == session[:user_id]
+    if Player.all.sort[(Boardlog.find(1).turn % Player.all.size)].user_id == session[:user_id]
       redirect_to("/game_start/#{session[:user_id]}")
     end
   end
 
   def otherplayers
-    if Player.all.sort[(TURN[:count] % Player.all.size)].user_id != session[:user_id]
+    if Player.all.sort[(Boardlog.find(1).turn % Player.all.size)].user_id != session[:user_id]
       redirect_to("/game_start/#{session[:user_id]}")
     end
   end
@@ -32,4 +33,6 @@ class ApplicationController < ActionController::Base
       Player.all.each{|i| i.delete}
       PlayerHold.all.size.times{ |i|  Player.create(name: PlayerHold.all.sort[i].name,user_id: PlayerHold.all.sort[i].user_id,hand:PlayerHold.all.sort[i].hand)}
   end
+
+
 end
