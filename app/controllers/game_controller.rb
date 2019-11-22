@@ -5,7 +5,7 @@ class GameController < ApplicationController
   def top
      @deck = Deck.last.deck
      @boards = Board.all.sort
-     @players= PLAYERS[:user_id].map{|user_id| Player.find_by(user_id: user_id) }
+     @players= Player.all.sort
 
      # 後で変更　更新しないように別枠で書く方がいい
      @player = Player.find_by(user_id: session[:user_id])
@@ -14,8 +14,8 @@ class GameController < ApplicationController
      @number_of_decks = @deck.size
      @turn = Boardlog.find(1).turn
      #ターンプレイヤーのID （全てのプレイヤー ÷ ターン数 ＝ 余り）- あがりのプレイヤー
-     @turn_player = Player.all.sort[(Boardlog.find(1).turn % Player.all.size)]
-     @player_name=Player.find_by(user_id: PLAYERS[:user_id][0])
+
+     @turn_player = Player.find_by(user_id: PLAYERS[:user_id][0])
      @boardlog_last = Boardlog.last
      respond_to do |format|
        format.html
@@ -107,6 +107,9 @@ class GameController < ApplicationController
        if  (Player.all.size)-1 <= JUDGE[:maru]
          #次のターンの設定
          #ターンプレイヤーの入れ替え
+         if Player.find_by(user_id: session[:user_id]).hand.size == 0
+
+         end
          PLAYERS[:user_id].push(PLAYERS[:user_id].shift)
 
          turn = Boardlog.find(1)

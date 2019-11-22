@@ -6,7 +6,7 @@
 <p>山札：<%=@number_of_decks%>枚</p>
 
 
-<p><%=@players[0].name%>のターン</p>
+<p><%=@turn_player.name%>のターン</p>
 
 <% @players.each do |player| %>
     <%= player.name %>
