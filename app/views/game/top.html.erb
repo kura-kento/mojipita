@@ -4,15 +4,7 @@
 <a id="logcount" data-id="<%=@boardlog_last.id%>">ログ：<%=@boardlog_last.id%></a>
 
 <p>山札：<%=@number_of_decks%>枚</p>
-<div class="board" id="board">
-    <% @boards.each do |board| %>
-        <%= render 'game/board',board: board %>
-    <% end %>
-</div>
 
-<div class="hand" id="hand">
-  <%= render 'game/hand', player: @player %>
-</div>
 
 <p><%=@players[0].name%>のターン</p>
 
@@ -44,3 +36,14 @@
             <input type="submit" name="aggregate" value="×">
         <% end %>
     <% end %>
+   <br>
+
+    <div class="board" id="board">
+        <% @boards.each do |board| %>
+            <%= render 'game/board',board: board %>
+        <% end %>
+    </div>
+
+    <div class="hand" id="hand">
+      <%= render 'game/hand', player: @player %>
+    </div>

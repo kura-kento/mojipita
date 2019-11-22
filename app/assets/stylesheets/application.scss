@@ -13,10 +13,11 @@
  * require_tree .
  * require_self
  */
- //@import "bootstrap-sprockets";
- //@import "bootstrap";
+ @import "bootstrap-sprockets";
+ @import "bootstrap";
 .board{
   width:720px;
+
 }
 .height{
 }
@@ -44,8 +45,8 @@
 .hand{
   width:600px;
   position:absolute;
-  top:800px;
-  left:100px;
+  top:1000px;
+  left:150px;
 }
 .opacity{
   opacity: 0.6;
