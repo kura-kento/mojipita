@@ -13,27 +13,38 @@
  * require_tree .
  * require_self
  */
- @import "bootstrap-sprockets";
- @import "bootstrap";
+ //@import "bootstrap-sprockets";
+ //@import "bootstrap";
 .board{
-  width:420px;
+  width:720px;
 }
 .height{
 }
 .width{
 }
-.card{
-
-  height:60px;
-  width:40px;
+.flaot_left{
+  float:left;
+}
+.board_card{
+  height:111px;
+  width:66px;
   border: 1px solid #ddd;
-  font-size:20px;
+  font-size:30px;
   background-color: rgb(95, 221, 75);
   float:left;
 }
+.hand_card{
+  height:146px;
+  width:96px;
+  margin:5px 10px;
+  border: 1px solid #ddd;
+  font-size:30px;
+  background-color: rgb(95, 221, 75);
+}
 .hand{
+  width:600px;
   position:absolute;
-  top:450px;
+  top:800px;
   left:100px;
 }
 .opacity{

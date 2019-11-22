@@ -21,7 +21,7 @@
      }
 
      $(function(){
-         setInterval(update, 5000);
+         setInterval(update, 1000);
      });
 
      function update(){

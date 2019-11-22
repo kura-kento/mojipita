@@ -1,7 +1,7 @@
 <% player.hand.size.times do |i| %>
-    <div class="card" id="<%= "hand_#{i}" %>" >
-        <%= form_tag("/action_step1/#{i}",remote: true) do %>
-            <input type="submit" name="name" value="<%= player.hand[i] %>" class="card">
-        <% end %>
-    </div>
+      <div class="flaot_left" id="<%= "hand_#{i}" %>" >
+          <%= form_tag("/action_step1/#{i}",remote: true) do %>
+              <input type="submit" name="name" value="<%= player.hand[i] %>" class="hand_card">
+          <% end %>
+      </div>
 <% end %>

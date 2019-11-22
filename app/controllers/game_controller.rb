@@ -114,14 +114,18 @@ class GameController < ApplicationController
          turn.save
          # 仮のdbを複製する
          Backup()
+         JUDGE[:maru],JUDGE[:batu] = 0,0
+         redirect_to("/game_start/#{session[:user_id]}")
        else
          #戻る処理
-         Rollback()
+         JUDGE[:maru],JUDGE[:batu] = 0,0
+         rollback()
        end
-       JUDGE[:maru]=0
-       JUDGE[:batu]=0
+
     end
-    redirect_to("/game_start/#{session[:user_id]}")
+
+
+
   end
 
 

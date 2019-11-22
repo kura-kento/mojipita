@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   post '/action_step1/:position' => 'game#action_step1'
   post '/action_step2/:height/:width' => 'game#action_step2'
   post '/draw/:loglast_id' => 'game#draw'
-  post '/judge' => 'game#judge'
+  post '/judge/:loglast_id' => 'game#judge'
 
   post '/aggregate' => 'game#aggregate'
   post '/page_update' => 'game#page_update'

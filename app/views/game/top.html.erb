@@ -26,7 +26,7 @@
         <input type="submit" name="" value="ドロー">
     <% end %>
     <br>
-    <%= form_tag("/judge") do %>
+    <%= form_tag("/judge/#{@boardlog_last.id}",remote: true) do %>
         <input type="submit" name="judge" value="判定">
     <% end %>
     <br>

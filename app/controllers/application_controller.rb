@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   #確定
   MOJI = {moji: 'あいいいいううううえおかかききくくけここささしししすすせそたたちちつつてととなにぬねのはひふへほまみむめもやゆゆよららりりるるれろわんんんんーー'}
   BOARD_ACTION = {name: false,position: false}
-  PLAYERS = {user_id: [0,124]}
+  PLAYERS = {user_id: [0,33]}
   #削除予定
   WAIT = {player: 0,join: 0}
   HOLD ={id: false}
@@ -32,6 +32,7 @@ class ApplicationController < ActionController::Base
       6.times{ |i|  Board.create(height:BoardHold.all.sort[i].height,width:BoardHold.all.sort[i].width)}
       Player.all.each{|i| i.delete}
       PlayerHold.all.size.times{ |i|  Player.create(name: PlayerHold.all.sort[i].name,user_id: PlayerHold.all.sort[i].user_id,hand:PlayerHold.all.sort[i].hand)}
+
   end
 
 
