@@ -105,13 +105,15 @@ class GameController < ApplicationController
   def judge
     if Player.all.size-1 <=  JUDGE[:maru] + JUDGE[:batu]
        if  (Player.all.size)-1 <= JUDGE[:maru]
+
+         if Player.find_by(user_id: session[:user_id]).hand.size == 0
+           PLAYERS[:user_id].shift
+         else
+           PLAYERS[:user_id].push(PLAYERS[:user_id].shift)
+         end
+
          #次のターンの設定
          #ターンプレイヤーの入れ替え
-         if Player.find_by(user_id: session[:user_id]).hand.size == 0
-
-         end
-         PLAYERS[:user_id].push(PLAYERS[:user_id].shift)
-
          turn = Boardlog.find(1)
          turn.turn += 1
          turn.save
@@ -126,7 +128,6 @@ class GameController < ApplicationController
        end
 
     end
-
 
 
   end

@@ -2,20 +2,20 @@ class ApplicationController < ActionController::Base
   #確定
   MOJI = {moji: 'あいいいいううううえおかかききくくけここささしししすすせそたたちちつつてととなにぬねのはひふへほまみむめもやゆゆよららりりるるれろわんんんんーー'}
   BOARD_ACTION = {name: false,position: false}
-  PLAYERS = {user_id: [0,33]}
+  PLAYERS = {user_id: [0]}
   #削除予定
   WAIT = {player: 0,join: 0}
   HOLD ={id: false}
   JUDGE = {maru: 0,batu:0}
 
   def turnplayer
-    if Player.all.sort[(Boardlog.find(1).turn % Player.all.size)].user_id == session[:user_id]
+    if PLAYERS[:user_id][0] == session[:user_id]
       redirect_to("/game_start/#{session[:user_id]}")
     end
   end
 
   def otherplayers
-    if Player.all.sort[(Boardlog.find(1).turn % Player.all.size)].user_id != session[:user_id]
+    if PLAYERS[:user_id][0] != session[:user_id]
       redirect_to("/game_start/#{session[:user_id]}")
     end
   end
