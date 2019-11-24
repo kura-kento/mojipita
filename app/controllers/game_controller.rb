@@ -1,21 +1,19 @@
 class GameController < ApplicationController
+  before_action :set_current_player
   before_action :otherplayers,{only:[:draw,:action_step2,:judge]}
   before_action :turnplayer,{only:[:aggregate]}
+  before_action :players_zero
+  before_action :session_id,{only:[:top]}
 
   def top
      @deck = Deck.last.deck
      @boards = Board.all.sort
      @players= Player.all.sort
-
      # 後で変更　更新しないように別枠で書く方がいい
-     @player = Player.find_by(user_id: session[:user_id])
-     #@players_name.shuffle!
-
      @number_of_decks = @deck.size
      @turn = Boardlog.find(1).turn
      #ターンプレイヤーのID （全てのプレイヤー ÷ ターン数 ＝ 余り）- あがりのプレイヤー
-
-     @turn_player = Player.find_by(user_id: PLAYERS[:user_id][0])
+     @turn_player = Player.find_by(id: PLAYERS[:user_id][0])
      @boardlog_last = Boardlog.last
      respond_to do |format|
        format.html
@@ -29,9 +27,8 @@ class GameController < ApplicationController
       #場にカードが無ければ
       if params[:loglast_id].to_i == Boardlog.last.id
           deck = Deck.last
-          player = Player.find_by(user_id: session[:user_id])
-          player.hand << deck.deck[0]
-          player.save
+          @current_player.hand << deck.deck[0]
+          @current_player.save
           deck.deck.slice!(0)
           deck.save
           #ホールドに再登録
@@ -50,46 +47,39 @@ class GameController < ApplicationController
   end
 
   def action_step1
-    player = Player.find_by(user_id: session[:user_id])
     @hand_number = (params[:position]).to_i
-      if player.word == nil
-          player.word, player.position = params[:name], params[:position]
-          player.save
+      if @current_player.word == nil
+          @current_player.word, @current_player.position = params[:name], params[:position]
+          @current_player.save
           respond_to do |format|
             format.html
             format.js
           end
-     else
-        #選択中の手札を押すと戻る
-        if player.word == params[:name]
-        #選択中の手札を交換する
-        else
-            hand = player.hand.split("")
-            hand[(player.position).to_i], hand[(params[:position]).to_i] = hand[(params[:position]).to_i], hand[(player.position).to_i]
-            player.hand = hand.join("")
+     elsif
+        #選択中の手札を交換する #(else) 選択中の手札を押すと戻る
+        if @current_player.word != params[:name] && @current_player.position != params[:position]
+          hand = @current_player.hand.split("")
+          hand[(@current_player.position).to_i], hand[(params[:position]).to_i] = hand[(params[:position]).to_i], hand[(@current_player.position).to_i]
+          @current_player.hand = hand.join("")
         end
-        player.word,player.position = nil, nil
-        player.save
-        page_update()
+          #同じ手札を押した時
+          @current_player.word,@current_player.position = nil, nil
+          @current_player.save
+          page_update()
       end
-
   end
 
-
   def action_step2
-      player = Player.find_by(user_id: session[:user_id])
-      if  player.word != nil && params[:action_step2] == "　"
-
+      if  @current_player.word != nil && params[:word] == "　"
         borad = Board.find_by(height: (params[:height]).to_i+1)
-        borad.width[(params[:width]).to_i] = player.word
+        borad.width[(params[:width]).to_i] = @current_player.word
         borad.save
 
-        player.hand.slice!(player.position.to_i)
+        @current_player.hand.slice!(@current_player.position.to_i)
 
-        Boardlog.create(moji: player.word,height: (params[:height]).to_i,width: (params[:width]).to_i)
-
-        player.word,player.position = nil, nil
-        player.save
+        Boardlog.create(moji: @current_player.word,height: (params[:height]).to_i,width: (params[:width]).to_i)
+        @current_player.word,@current_player.position = nil, nil
+        @current_player.save
         page_update()
       end
         #redirect_to("/game_start/#{session[:user_id]}")
@@ -98,20 +88,22 @@ class GameController < ApplicationController
   def aggregate
       #改善:どちらかを押したら両方押せなくしたい  JUDGE
       params[:aggregate] == "●" ? JUDGE[:maru] += 1 : JUDGE[:batu] += 1
+      #page_update()
+      #topに戻りBoardlog.last.idを取得しないと判定時自動更新できない。
       redirect_to("/game_start/#{session[:user_id]}")
-      # page_update()
   end
 
   def judge
     if Player.all.size-1 <=  JUDGE[:maru] + JUDGE[:batu]
+      @current_player.word,@current_player.position = nil, nil
+      @current_player.save
        if  (Player.all.size)-1 <= JUDGE[:maru]
-
-         if Player.find_by(user_id: session[:user_id]).hand.size == 0
+         #flash[:notice] = "成功"
+         if Player.find_by(id: session[:user_id]).hand.size == 0
            PLAYERS[:user_id].shift
          else
            PLAYERS[:user_id].push(PLAYERS[:user_id].shift)
          end
-
          #次のターンの設定
          #ターンプレイヤーの入れ替え
          turn = Boardlog.find(1)
@@ -123,28 +115,25 @@ class GameController < ApplicationController
          redirect_to("/game_start/#{session[:user_id]}")
        else
          #戻る処理
+         #flash[:notice] = "失敗"
          JUDGE[:maru],JUDGE[:batu] = 0,0
          rollback()
        end
-
     end
-
-
   end
-
 
   def rollback
     Rollback()
-    player = Player.find_by(user_id: session[:user_id])
-    player.word,player.position = nil, nil
-    player.save
+    @current_player = Player.find_by(id: session[:user_id])
+    @current_player.word,@current_player.position = nil, nil
+    @current_player.save
     #リロードすると合わなくなる
     Boardlog.where('id > ?',params[:loglast_id]).each{|i| i.delete}
     page_update()
   end
 
   def page_update
-    @player = Player.find_by(user_id: session[:user_id])
+    @current_player = Player.find_by(id: session[:user_id])
     @boards = Board.all.sort
     respond_to do |format|
       format.html

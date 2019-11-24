@@ -1,5 +1,7 @@
 class HomeController < ApplicationController
+  before_action :players_zero,{except:[:top,:host_login_check]}
   def top
+
   end
 
   def wait_area
@@ -20,20 +22,22 @@ class HomeController < ApplicationController
 
   def host_login_check
     if params[:password] ==  "2580"
-      session[:user_id] = 0
+      #前回のデータ削除
       WAIT[:player], WAIT[:join], JUDGE[:maru], JUDGE[:batu] = 0,0,0,0
-      
       BOARD_ACTION[:name],BOARD_ACTION[:position] = false,false
-
       Player.all.each{|i| i.delete}
       Deck.all.each{|i| i.delete}
-      Player.create(name: params[:name],user_id: session[:user_id])
+
+      player = Player.create(name: params[:name])
+      session[:user_id] = player.id
       redirect_to("/setting")
     else
       render("host_login")
     end
   end
+
   def setting
+
   end
 
   def setting_player
@@ -46,7 +50,6 @@ class HomeController < ApplicationController
     player = Player.new(name: params[:name])
     if player.save
       session[:user_id] = player.id
-      player.user_id = player.id
       player.save
       WAIT[:join] += 1
       redirect_to("/wait_area")
@@ -82,7 +85,7 @@ class HomeController < ApplicationController
     }
     @deck.save
 
-    PLAYERS[:user_id] = Player.all.map(&:user_id).shuffle!
+    PLAYERS[:user_id] = Player.all.map(&:id).shuffle!
 
     # 仮のdbを複製する
     Backup()

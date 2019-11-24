@@ -1,3 +1,5 @@
+'use strict';
+{
 //最終的にターンプレイヤが変わったらページを切り替える
   $(function(){
     function reload(){
@@ -21,7 +23,7 @@
      }
 
      $(function(){
-         setInterval(update, 1000);
+         setInterval(update, 5000);
      });
 
      function update(){
@@ -61,3 +63,4 @@
      }
 
   });
+}

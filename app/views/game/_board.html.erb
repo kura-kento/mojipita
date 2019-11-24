@@ -3,7 +3,7 @@
         <div class="width">
             <div class="" id="">
                 <%= form_tag("/action_step2/#{board.height-1}/#{width}",remote: true) do %>
-                  <input id="<%= "input_#{board.height-1}_#{width}"%>" type="submit" name="action_step2" value="<%= board.width[width] %>" class="board_card">
+                  <input id="<%= "input_#{board.height-1}_#{width}"%>" type="submit" name="word" value="<%= board.width[width] %>" class="board_card">
                 <% end %>
             </div>
         </div>

@@ -15,6 +15,16 @@
  */
  @import "bootstrap-sprockets";
  @import "bootstrap";
+ .flash{
+  height:40px;
+  width:100%;
+  background-color: rgb(242, 140, 59);
+  color:white;
+  text-align: center;
+  line-height: 40px;
+  font-size:20px;
+}
+
 .board{
   width:720px;
 
@@ -50,4 +60,21 @@
 }
 .opacity{
   opacity: 0.6;
+}
+.btn-item{
+  float: left;
+  margin:0 30px;
+  height:40px;
+  width:100px;
+}
+.btn-items{
+  height:50px;
+}
+.players_name{
+  overflow: hidden;
+}
+.names{
+  border: 1px solid #999;
+  margin:0 20px 20px 0px;
+  padding:5px;
 }
