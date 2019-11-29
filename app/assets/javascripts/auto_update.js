@@ -2,8 +2,8 @@
 {
 
   $(function(){
-    const session_id = $('#turncount').data('session_id');
-    const turn_player_id = $('#turncount').data('turn_player_id');
+
+
     function btnHidden(id){
        document.getElementById(id).style.visibility = 'hidden';
     }
@@ -71,6 +71,8 @@
      }
 
      function aggregate(){
+        var turn_player_id = $('#turncount').data('turn_player_id');
+        var session_id = $('#turncount').data('session_id');
         var turn_id = $('#turncount').data('id');
         $.ajax({   url: location.href,
                    type: 'GET',
