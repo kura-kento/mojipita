@@ -5,6 +5,7 @@ class CreateBoardlogs < ActiveRecord::Migration[5.2]
       t.integer :height
       t.integer :width
       t.integer :turn
+      t.boolean :confirm, default:false
       t.timestamps
     end
   end

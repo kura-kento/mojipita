@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   post '/judge/:loglast_id' => 'game#judge'
 
   post '/aggregate' => 'game#aggregate'
+  post '/confirm' => 'game#confirm'
   post '/page_update' => 'game#page_update'
   post '/rollback/:loglast_id' => 'game#rollback'
 end

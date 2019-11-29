@@ -15,6 +15,11 @@
  */
  @import "bootstrap-sprockets";
  @import "bootstrap";
+
+ #maru_btn { visibility: hidden; }
+ #batu_btn { visibility: hidden; }
+ #judge_btn { visibility: hidden; }
+
  .flash{
   height:40px;
   width:100%;
@@ -23,6 +28,9 @@
   text-align: center;
   line-height: 40px;
   font-size:20px;
+  position: fixed;
+  top:0;
+
 }
 
 .board{

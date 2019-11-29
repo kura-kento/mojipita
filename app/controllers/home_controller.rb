@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  before_action :players_zero,{except:[:top,:host_login_check]}
+  before_action :players_zero,{except:[:top,:host_login_check,:host_login]}
   def top
 
   end
@@ -27,7 +27,7 @@ class HomeController < ApplicationController
       BOARD_ACTION[:name],BOARD_ACTION[:position] = false,false
       Player.all.each{|i| i.delete}
       Deck.all.each{|i| i.delete}
-
+      Turn.all.each{|i| i.delete}
       player = Player.create(name: params[:name])
       session[:user_id] = player.id
       redirect_to("/setting")
@@ -67,10 +67,10 @@ class HomeController < ApplicationController
     1.upto(6){|i|
       if i == 3
           Board.create(width:"　　　　　#{moji[0]}　　　　",height:i)
-          Boardlog.create(id:1,height:2,width:5,moji: moji[0],turn: 0)
+          Boardlog.create(id:1,height:2,width:5,moji: moji[0],turn: 0,confirm: true)
       elsif i == 4
           Board.create(width:"　　　　#{moji[1]}　　　　　",height:i)
-          Boardlog.create(id:2,height:3,width:4,moji: moji[1])
+          Boardlog.create(id:2,height:3,width:4,moji: moji[1],confirm: true)
       else
           Board.create(width:"　　　　　　　　　　",height:i)
       end
@@ -86,7 +86,7 @@ class HomeController < ApplicationController
     @deck.save
 
     PLAYERS[:user_id] = Player.all.map(&:id).shuffle!
-
+    Turn.create(player: PLAYERS[:user_id].size.to_i,turn_player_id: PLAYERS[:user_id][0].to_i)
     # 仮のdbを複製する
     Backup()
   #  DeckHold.all.each{|i| i.delete}

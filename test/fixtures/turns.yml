@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  confirm: 
+  player: 1
+  maru: 
+  batu: 
+  turn_player_id: 1
+
+two:
+  confirm: 
+  player: 1
+  maru: 
+  batu: 
+  turn_player_id: 1

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_17_072728) do
+ActiveRecord::Schema.define(version: 2019_11_28_070518) do
 
   create_table "board_holds", force: :cascade do |t|
     t.string "width", limit: 10
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 2019_11_17_072728) do
     t.integer "height"
     t.integer "width"
     t.integer "turn"
+    t.boolean "confirm", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -61,6 +62,17 @@ ActiveRecord::Schema.define(version: 2019_11_17_072728) do
     t.integer "user_id"
     t.string "word"
     t.string "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "turns", force: :cascade do |t|
+    t.boolean "confirm", default: false
+    t.integer "player"
+    t.integer "maru", default: 0
+    t.integer "batu", default: 0
+    t.integer "turn_player_id"
+    t.integer "count", default: 1
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
