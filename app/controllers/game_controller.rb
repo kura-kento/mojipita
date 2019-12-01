@@ -39,7 +39,7 @@ class GameController < ApplicationController
           Backup()
           PLAYERS[:user_id].push(PLAYERS[:user_id].shift)
           #最終的にターンプレイヤが変わったらページを切り替える
-          Turn.create(turn_player_id: PLAYERS[:user_id][0] ,player: PLAYERS[:user_id].size,count: Turn.last.count+1)
+          Turn.create(turn_player_id: PLAYERS[:user_id][0] ,player: Turn.last.player,count: Turn.last.count+1)
 
           redirect_to("/game_start/#{session[:user_id]}")
       else
@@ -73,7 +73,7 @@ class GameController < ApplicationController
   end
 
   def action_step2
-      if  @current_player.word != nil && params[:word] == "　"
+      if  @current_player.word != nil && params[:word] == "　" && Turn.last.confirm == false
         borad = Board.find_by(height: (params[:height]).to_i+1)
         borad.width[(params[:width]).to_i] = @current_player.word
         borad.save
@@ -128,7 +128,7 @@ class GameController < ApplicationController
                                               i.confirm = true
                                               i.save
                                             }
-         Turn.create(turn_player_id: PLAYERS[:user_id][0] ,player: PLAYERS[:user_id].size,count: Turn.last.count+1)
+         Turn.create(turn_player_id: PLAYERS[:user_id][0] ,player: Turn.last.player,count: Turn.last.count+1)
          # 仮のdbを複製する
          Backup()
          JUDGE[:maru],JUDGE[:batu] = 0,0
@@ -147,12 +147,15 @@ class GameController < ApplicationController
   end
 
   def rollback
-    Rollback()
-    @current_player = Player.find_by(id: session[:user_id])
-    @current_player.word,@current_player.position = nil, nil
-    @current_player.save
-    #リロードすると合わなくなる
-    Boardlog.where(confirm:false).each{|i| i.delete}
+    if Turn.last.confirm == false
+      Rollback()
+      @current_player = Player.find_by(id: session[:user_id])
+      @current_player.word,@current_player.position = nil, nil
+      @current_player.save
+      #リロードすると合わなくなる
+      Boardlog.where(confirm:false).each{|i| i.delete}
+    end
+
     page_update()
   end
 

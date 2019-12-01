@@ -3,6 +3,9 @@
 
   $(function(){
 
+  
+
+
     function btnHidden(id){
        document.getElementById(id).style.visibility = 'hidden';
     }
@@ -95,7 +98,7 @@
                 }else{
                     //投票がされていなかったらボタンが押せるようにする。
                     if(this.maru+this.batu === 0){
-                          disabledfalse();
+                        disabledfalse();
                     }
                     //確定ボタンが押されたら「○」「×」ボタンがでる。
                     if(this.confirm === true){
@@ -110,4 +113,5 @@
      }
 
   });
+
 }
