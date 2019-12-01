@@ -106,7 +106,10 @@ class GameController < ApplicationController
       turn.save
       #page_update()
       #topに戻りBoardlog.last.idを取得しないと判定時自動更新できない。
-      redirect_to("/game_start/#{session[:user_id]}")
+      respond_to do |format|
+        format.html
+        format.js
+      end
   end
 
   def judge
@@ -134,6 +137,9 @@ class GameController < ApplicationController
 
          #戻る処理
          flash.now[:notice] = "失敗"
+         turn = Turn.last
+         turn.maru,turn.batu =0,0
+         turn.save
          JUDGE[:maru],JUDGE[:batu] = 0,0
          rollback()
        end

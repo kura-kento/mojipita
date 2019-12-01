@@ -3,13 +3,15 @@
 
   $(function(){
 
-
     function btnHidden(id){
        document.getElementById(id).style.visibility = 'hidden';
     }
     function btnVisibility(id){
        document.getElementById(id).style.visibility = 'visible';
-
+    }
+    function disabledfalse(){
+      $('#batu_btn').prop( 'disabled', false );
+      $('#maru_btn').prop( 'disabled', false );
     }
     function reload(){
        location.reload();
@@ -38,10 +40,7 @@
           setInterval(aggregate, 1000);
       });
 
-
      function update(){
-
-
 
          $.ajax({
              url: location.href,
@@ -86,20 +85,24 @@
                 if(this.count !== turn_id ){
                     reload();
                 }
-                if(session_id === this.turn_player_id && this.player === (this.maru+this.batu+1)){
-                    btnVisibility('judge_btn');
-                }else if(session_id !== this.turn_player_id){
-                  //確定ボタンが押されたら「○」「×」ボタンがでる。
+                //ターンプレイヤー
+                if(session_id === this.turn_player_id){
+                    //投票が集まったら
+                    if(this.player === (this.maru+this.batu+1)){
+                        btnVisibility('judge_btn');
+                    }
+                //ターンプレイヤー以外
+                }else{
+                    //投票がされていなかったらボタンが押せるようにする。
+                    if(this.maru+this.batu === 0){
+                          disabledfalse();
+                    }
+                    //確定ボタンが押されたら「○」「×」ボタンがでる。
                     if(this.confirm === true){
-                        btnVisibility('maru_btn');
-                        btnVisibility('batu_btn');
-                    }else{
-                        btnHidden('maru_btn');
-                        btnHidden('batu_btn');
+                          btnVisibility('maru_btn');
+                          btnVisibility('batu_btn');
                     }
                 }
-
-
 
             });
         })
