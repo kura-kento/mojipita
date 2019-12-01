@@ -90,7 +90,7 @@ class GameController < ApplicationController
 
   def confirm
       turn = Turn.last
-      turn.confirm = !(turn.confirm)
+      turn.confirm = true
       turn.save
       @current_player.word,@current_player.position = nil, nil
       @current_player.save
@@ -138,6 +138,7 @@ class GameController < ApplicationController
          #戻る処理
          flash.now[:notice] = "失敗"
          turn = Turn.last
+         turn.confirm = false
          turn.maru,turn.batu =0,0
          turn.save
          JUDGE[:maru],JUDGE[:batu] = 0,0
