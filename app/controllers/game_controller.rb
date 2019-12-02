@@ -149,14 +149,15 @@ class GameController < ApplicationController
   end
 
   def rollback
-    @current_player = Player.find_by(id: session[:user_id])
     if Turn.last.confirm == false
       Rollback()
+      @current_player = Player.find_by(id: session[:user_id])
       @current_player.word,@current_player.position = nil, nil
       @current_player.save
       #リロードすると合わなくなる
       Boardlog.where(confirm:false).each{|i| i.delete}
     end
+    @current_player = Player.find_by(id: session[:user_id])
     @boards = Board.all.sort
     respond_to do |format|
       format.html
