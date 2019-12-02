@@ -60,9 +60,9 @@ class GameController < ApplicationController
      else
         #選択中の手札を交換する #(else) 選択中の手札を押すと戻る
         if @current_player.position != params[:position]
-          hand = @current_player.hand.split("")
+          hand = @current_player.hand
           hand[(@current_player.position).to_i], hand[(params[:position]).to_i] = hand[(params[:position]).to_i], hand[(@current_player.position).to_i]
-          @current_player.hand = hand.join("")
+          @current_player.hand = hand
         end
           #同じ手札を押した時
           @current_player.word,@current_player.position = nil, nil
@@ -73,23 +73,27 @@ class GameController < ApplicationController
 
   def action_step2
       if  @current_player.word != nil && params[:word] == "　" && Turn.last.confirm == false
-        borad = Board.find_by(height: (params[:height]).to_i+1)
-        borad.width[(params[:width]).to_i] = @current_player.word
-        borad.save
-        @current_player.hand.slice!(@current_player.position.to_i)
-        Boardlog.create(moji: @current_player.word, height: (params[:height]).to_i, width: (params[:width]).to_i)
-        @current_player.word,@current_player.position = nil, nil
-        @current_player.save
-        @boards = Board.all.sort
-        respond_to do |format|
-          format.js
-        end
+          borad = Board.find_by(height: (params[:height]).to_i+1)
+          borad.width[(params[:width]).to_i] = @current_player.word
+          borad.save
+          @current_player.hand.slice!(@current_player.position.to_i)
+          Boardlog.create(moji: @current_player.word, height: (params[:height]).to_i, width: (params[:width]).to_i)
+          @current_player.word,@current_player.position = nil, nil
+          @current_player.save
+          @boards = Board.all.sort
+          
+          respond_to do |format|
+            format.js
+          end
       else
         @hand_number = @current_player.position
-        page_update()
-      end
 
-      #redirect_to("/game_start/#{session[:user_id]}")
+        @current_player = Player.find_by(id: session[:user_id])
+        @boards = Board.all.sort
+        respond_to do |format|
+          format.js {render :page_update}
+        end
+      end
   end
       #確定
   def confirm
