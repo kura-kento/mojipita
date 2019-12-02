@@ -23,8 +23,7 @@ class HomeController < ApplicationController
   def host_login_check
     if params[:password] ==  "2580"
       #前回のデータ削除
-      WAIT[:player], WAIT[:join], JUDGE[:maru], JUDGE[:batu] = 0,0,0,0
-      BOARD_ACTION[:name],BOARD_ACTION[:position] = false,false
+      WAIT[:player], WAIT[:join] = 0,0
       Player.all.each{|i| i.delete}
       Deck.all.each{|i| i.delete}
       Turn.all.each{|i| i.delete}

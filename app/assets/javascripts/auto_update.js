@@ -3,9 +3,6 @@
 
   $(function(){
 
-  
-
-
     function btnHidden(id){
        document.getElementById(id).style.visibility = 'hidden';
     }
@@ -40,7 +37,7 @@
      });
 
       $(function(){
-          setInterval(aggregate, 1000);
+         setInterval(aggregate, 1000);
       });
 
      function update(){
@@ -91,8 +88,10 @@
                 //ターンプレイヤー
                 if(session_id === this.turn_player_id){
                     //投票が集まったら
-                    if(this.player === (this.maru+this.batu+1)){
+                    if(this.player === (this.maru+this.batu+1) && this.confirm === true){
                         btnVisibility('judge_btn');
+                    }else if(this.confirm === false){
+                        btnHidden('judge_btn');
                     }
                 //ターンプレイヤー以外
                 }else{
@@ -104,6 +103,9 @@
                     if(this.confirm === true){
                           btnVisibility('maru_btn');
                           btnVisibility('batu_btn');
+                    }else{
+                          btnHidden('maru_btn');
+                          btnHidden('batu_btn');
                     }
                 }
 

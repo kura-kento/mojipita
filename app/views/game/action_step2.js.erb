@@ -1,0 +1,5 @@
+$('#board').html("<%= j (render 'top') %>");
+$('#hand').html("<%= j (render 'top_hand')%>");
+//場にカードを出した。
+    $('#draw_btn').prop('disabled', true);
+    $('#confirm_btn').prop('disabled', false);

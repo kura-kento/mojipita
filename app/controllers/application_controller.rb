@@ -1,12 +1,11 @@
 class ApplicationController < ActionController::Base
   #確定
   MOJI = {moji: 'あいいいいううううえおかかききくくけここささしししすすせそたたちちつつてととなにぬねのはひふへほまみむめもやゆゆよららりりるるれろわんんんんーー'}
-  BOARD_ACTION = {name: false,position: false}
-  PLAYERS = {user_id: [13]}
+  #BOARD_ACTION = {name: false,position: false}
+  PLAYERS = {user_id: [44]}
   #削除予定
   WAIT = {player: 0,join: 0}
   HOLD ={id: false}
-  JUDGE = {maru: 0,batu:0}
   before_action :set_current_player
 
   def turnplayer

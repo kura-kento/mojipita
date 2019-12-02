@@ -21,16 +21,17 @@
     <div class="btn-items">
       <%if @turn_player.id == session[:user_id] %>
           <%= form_tag("/draw/#{@boardlogs.size}",remote: true) do %>
-              <input type="submit" class="btn-item" name="" value="ドロー">
+              <input type="submit" class="btn-item" id="draw_btn" name="" value="ドロー">
           <% end %>
 
           <%= form_tag("/rollback/#{@boardlogs.size}",remote: true) do %>
-              <input type="submit" class="btn-item" name="rollback" value="やり直し">
+              <input type="submit" class="btn-item" id="rollback_btn" name="rollback" value="やり直し">
           <% end %>
 
           <%= form_tag("/confirm",remote: true) do %>
-              <input type="submit" class="btn-item"  name="confirm" value="確定">
+              <input type="submit" class="btn-item" id="confirm_btn" name="confirm" disabled="true" value="確定">
           <% end %>
+
           <%= form_tag("/judge/#{@boardlogs.size}",remote: true) do %>
               <input type="submit" class="btn-item" id="judge_btn" name="judge" value="判定">
           <% end %>

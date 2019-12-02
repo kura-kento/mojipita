@@ -1,0 +1,7 @@
+
+$('#board').html("<%= j (render 'top') %>");
+$('#hand').html("<%= j (render 'top_hand')%>");
+//確定ボタン
+    $('#draw_btn').prop('disabled', true);
+    $('#rollback_btn').prop('disabled', true);
+    $('#confirm_btn').prop('disabled', true);

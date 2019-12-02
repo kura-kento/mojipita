@@ -77,31 +77,34 @@ class GameController < ApplicationController
         borad = Board.find_by(height: (params[:height]).to_i+1)
         borad.width[(params[:width]).to_i] = @current_player.word
         borad.save
-
         @current_player.hand.slice!(@current_player.position.to_i)
-
         Boardlog.create(moji: @current_player.word,height: (params[:height]).to_i,width: (params[:width]).to_i)
         @current_player.word,@current_player.position = nil, nil
         @current_player.save
-        page_update()
+        @boards = Board.all.sort
+        respond_to do |format|
+          format.html
+          format.js
+        end
       end
         #redirect_to("/game_start/#{session[:user_id]}")
   end
-
+      #確定
   def confirm
       turn = Turn.last
       turn.confirm = true
       turn.save
       @current_player.word,@current_player.position = nil, nil
       @current_player.save
-      page_update()
+      @boards = Board.all.sort
+      respond_to do |format|
+        format.html
+        format.js
+      end
   end
-  #集計
+      #集計
   def aggregate
-      #改善:どちらかを押したら両方押せなくしたい  JUDGE
-      params[:aggregate] == "●" ? JUDGE[:maru] += 1 : JUDGE[:batu] += 1
-
-      turn=Turn.last
+      turn = Turn.last
       params[:aggregate] == "●" ? turn.maru += 1 :turn.batu += 1
       turn.save
       #page_update()
@@ -111,11 +114,11 @@ class GameController < ApplicationController
         format.js
       end
   end
-
+      #判定
   def judge
-    if Player.all.size-1 <=  JUDGE[:maru] + JUDGE[:batu]
+    if Player.all.size-1 <=  Turn.last.maru + Turn.last.batu
 
-       if  (Player.all.size)-1 <= JUDGE[:maru]
+       if  (Player.all.size)-1 <= Turn.last.maru
          flash[:notice] = "成功"
          if Player.find_by(id: session[:user_id]).hand.size == 0
            PLAYERS[:user_id].shift
@@ -131,7 +134,6 @@ class GameController < ApplicationController
          Turn.create(turn_player_id: PLAYERS[:user_id][0] ,player: Turn.last.player,count: Turn.last.count+1)
          # 仮のdbを複製する
          Backup()
-         JUDGE[:maru],JUDGE[:batu] = 0,0
          redirect_to("/game_start/#{session[:user_id]}")
        else
 
@@ -141,23 +143,25 @@ class GameController < ApplicationController
          turn.confirm = false
          turn.maru,turn.batu =0,0
          turn.save
-         JUDGE[:maru],JUDGE[:batu] = 0,0
          rollback()
        end
     end
   end
 
   def rollback
+    @current_player = Player.find_by(id: session[:user_id])
     if Turn.last.confirm == false
       Rollback()
-      @current_player = Player.find_by(id: session[:user_id])
       @current_player.word,@current_player.position = nil, nil
       @current_player.save
       #リロードすると合わなくなる
       Boardlog.where(confirm:false).each{|i| i.delete}
     end
-
-    page_update()
+    @boards = Board.all.sort
+    respond_to do |format|
+      format.html
+      format.js {render :rollback}
+    end
   end
 
   def page_update
