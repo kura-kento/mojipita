@@ -25,7 +25,7 @@
           <% end %>
 
           <%= form_tag("/rollback/#{@boardlogs.size}",remote: true) do %>
-              <input type="submit" class="btn-item" id="rollback_btn" name="rollback" value="やり直し">
+              <input type="submit" class="btn-item" id="rollback_btn" name="rollback" disabled="true" value="やり直し">
           <% end %>
 
           <%= form_tag("/confirm",remote: true) do %>

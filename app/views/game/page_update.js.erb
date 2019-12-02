@@ -1,5 +1,7 @@
 
   $('#board').html("<%= j (render 'top') %>");
   $('#hand').html("<%= j (render 'top_hand')%>");
+  $("#hand_<%="#{@hand_number}"%>").toggleClass("opacity");
+
   $('#flashmessage').html("<%= j (render 'layouts/app_flash') %>");
   $('.flash').fadeOut(2500);

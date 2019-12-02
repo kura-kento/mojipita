@@ -9,20 +9,20 @@ class GameController < ApplicationController
      @deck = Deck.last.deck
      @boards = Board.all.sort
      @players= Player.all.sort
-     # 後で変更　更新しないように別枠で書く方がいい
+
      @number_of_decks = @deck.size
      @turn = Turn.last.count
-     #ターンプレイヤーのID （全てのプレイヤー ÷ ターン数 ＝ 余り）- あがりのプレイヤー
+
      @turn_player = Player.find_by(id: PLAYERS[:user_id][0])
      @boardlogs = Boardlog.where(confirm:true)
      respond_to do |format|
-       format.html
-       if params[:path] == "000"
-       format.json {@new_log = Boardlog.where(confirm:false)
-                    @all_log = Boardlog.all
-                    }
-        else
-        format.json {@turn_last = Turn.last}
+         format.html
+         if params[:path] == "000"
+         format.json {@new_log = Boardlog.where(confirm:false)
+                      @all_log = Boardlog.all
+                      }
+         else
+         format.json {@turn_last = Turn.last}
          end
      end
   end
@@ -50,17 +50,16 @@ class GameController < ApplicationController
   end
 
   def action_step1
-    @hand_number = (params[:position]).to_i
       if @current_player.word == nil
+          @hand_number = (params[:position]).to_i
           @current_player.word, @current_player.position = params[:name], params[:position]
           @current_player.save
           respond_to do |format|
-            # format.html
             format.js
           end
-     elsif
+     else
         #選択中の手札を交換する #(else) 選択中の手札を押すと戻る
-        if @current_player.word != params[:name] && @current_player.position != params[:position]
+        if @current_player.position != params[:position]
           hand = @current_player.hand.split("")
           hand[(@current_player.position).to_i], hand[(params[:position]).to_i] = hand[(params[:position]).to_i], hand[(@current_player.position).to_i]
           @current_player.hand = hand.join("")
@@ -78,16 +77,19 @@ class GameController < ApplicationController
         borad.width[(params[:width]).to_i] = @current_player.word
         borad.save
         @current_player.hand.slice!(@current_player.position.to_i)
-        Boardlog.create(moji: @current_player.word,height: (params[:height]).to_i,width: (params[:width]).to_i)
+        Boardlog.create(moji: @current_player.word, height: (params[:height]).to_i, width: (params[:width]).to_i)
         @current_player.word,@current_player.position = nil, nil
         @current_player.save
         @boards = Board.all.sort
         respond_to do |format|
-          format.html
           format.js
         end
+      else
+        @hand_number = @current_player.position
+        page_update()
       end
-        #redirect_to("/game_start/#{session[:user_id]}")
+
+      #redirect_to("/game_start/#{session[:user_id]}")
   end
       #確定
   def confirm
@@ -96,9 +98,7 @@ class GameController < ApplicationController
       turn.save
       @current_player.word,@current_player.position = nil, nil
       @current_player.save
-      @boards = Board.all.sort
       respond_to do |format|
-        format.html
         format.js
       end
   end
@@ -107,18 +107,15 @@ class GameController < ApplicationController
       turn = Turn.last
       params[:aggregate] == "●" ? turn.maru += 1 :turn.batu += 1
       turn.save
-      #page_update()
-      #topに戻りBoardlog.last.idを取得しないと判定時自動更新できない。
       respond_to do |format|
-        format.html
         format.js
       end
   end
       #判定
   def judge
-    if Player.all.size-1 <=  Turn.last.maru + Turn.last.batu
-
-       if  (Player.all.size)-1 <= Turn.last.maru
+    turn = Turn.last
+    if turn.player-1 <=  turn.maru + turn.batu
+       if  turn.player-1 <= turn.maru
          flash[:notice] = "成功"
          if Player.find_by(id: session[:user_id]).hand.size == 0
            PLAYERS[:user_id].shift
@@ -136,10 +133,8 @@ class GameController < ApplicationController
          Backup()
          redirect_to("/game_start/#{session[:user_id]}")
        else
-
          #戻る処理
          flash.now[:notice] = "失敗"
-         turn = Turn.last
          turn.confirm = false
          turn.maru,turn.batu =0,0
          turn.save
@@ -154,13 +149,11 @@ class GameController < ApplicationController
       @current_player = Player.find_by(id: session[:user_id])
       @current_player.word,@current_player.position = nil, nil
       @current_player.save
-      #リロードすると合わなくなる
       Boardlog.where(confirm:false).each{|i| i.delete}
     end
     @current_player = Player.find_by(id: session[:user_id])
     @boards = Board.all.sort
     respond_to do |format|
-      format.html
       format.js {render :rollback}
     end
   end
@@ -169,7 +162,6 @@ class GameController < ApplicationController
     @current_player = Player.find_by(id: session[:user_id])
     @boards = Board.all.sort
     respond_to do |format|
-      format.html
       format.js {render :page_update}
     end
   end
