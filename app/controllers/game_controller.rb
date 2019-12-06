@@ -81,13 +81,12 @@ class GameController < ApplicationController
           @current_player.word,@current_player.position = nil, nil
           @current_player.save
           @boards = Board.all.sort
-          
+
           respond_to do |format|
             format.js
           end
       else
         @hand_number = @current_player.position
-
         @current_player = Player.find_by(id: session[:user_id])
         @boards = Board.all.sort
         respond_to do |format|
