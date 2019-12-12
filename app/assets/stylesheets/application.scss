@@ -32,7 +32,9 @@
   top:0;
 
 }
-
+.form-error{
+  color:red;
+}
 .board{
   width:720px;
 
@@ -86,3 +88,45 @@
   margin:0 20px 20px 0px;
   padding:5px;
 }
+.yellow{
+  background-color: yellow;
+}
+
+#timer{
+   height:120px;
+   line-height:120px;
+   font-size:40px;
+   margin-bottom: 10px;
+   transition: 0.8s;
+   background:#ddd;
+ }
+
+ .timeout{
+   background: yellow;
+   transform: rotate(360deg);
+   color:red;
+
+ }
+ .controls{
+   display: flex;
+   justify-content: space-around;
+ }
+ .btn{
+   width:70px;
+   height:45px;
+   line-height:45px;
+   background:#ddd;
+   font-weight:bold;
+   cursor:pointer;
+   user-select:none;
+   font-size:20px;
+ }
+ .start-btn{
+   width:230px;
+   height:180px;
+   line-height: 180px;
+   position: absolute;
+   z-index: 10;
+   top:10px;
+   background-color: rgb(213, 92, 92);
+ }

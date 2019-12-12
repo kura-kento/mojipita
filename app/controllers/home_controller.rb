@@ -1,37 +1,35 @@
 class HomeController < ApplicationController
   before_action :players_zero,{except:[:top,:host_login_check,:host_login]}
+
   def top
 
   end
 
-  def wait_area
-     @wait= "#{WAIT[:player]},#{WAIT[:join]}"
-  end
-
-  def wait_area_check
-    if  WAIT[:player] == WAIT[:join]
-      redirect_to("/game_start/#{session[:user_id]}")
-    else
-      render("wait_area")
-    end
-  end
-
   def host_login
-
+    @player = Player.new
   end
 
   def host_login_check
     if params[:password] ==  "2580"
-      #前回のデータ削除
-      WAIT[:player], WAIT[:join] = 0,0
-      Player.all.each{|i| i.delete}
-      Deck.all.each{|i| i.delete}
-      Turn.all.each{|i| i.delete}
-      player = Player.create(name: params[:name])
-      session[:user_id] = player.id
-      redirect_to("/setting")
+        #前回のデータ削除
+        WAIT[:set] = false
+        WAIT[:player], WAIT[:join] = 0,0
+        #DBを消さずにホストユーザーに紐付けると複数アプリが扱える。
+        Player.all.each{|i| i.delete}
+        Deck.all.each{|i| i.delete}
+        Turn.all.each{|i| i.delete}
+        @player = Player.new(name: params[:name])
+        if @player.save
+            #ホストプレイヤーが作られてから６０秒までゲストが参加できる。
+            session[:user_id] = @player.id
+            redirect_to("/setting")
+        else
+            render("host_login")
+        end
+
     else
-      render("host_login")
+      flash.now[:notice] = "パスワードが違います。"
+      render("top")
     end
   end
 
@@ -40,20 +38,49 @@ class HomeController < ApplicationController
   end
 
   def setting_player
-    WAIT[:player] += (params[:player]).to_i
-    WAIT[:join] += 1
+    WAIT[:player] = (params[:player]).to_i
+    WAIT[:join] = 1
     redirect_to("/wait_area")
   end
 
   def gerst_login
-    player = Player.new(name: params[:name])
-    if player.save
-      session[:user_id] = player.id
-      player.save
-      WAIT[:join] += 1
-      redirect_to("/wait_area")
+    @player = Player.new
+    time = Time.now
+    if  WAIT[:player] == 0
+       flash[:notice] = "ホストがいません。"
+       redirect_to("/")
+    #ホストプレイヤーが作られて60秒後
+    elsif Player.all.sort[0].created_at <= time - 60
+        flash[:notice] = "タイムオーバーです。"
+        redirect_to("/")
+    elsif WAIT[:player] <= WAIT[:join]
+       flash[:notice] = "人数オーバーです。"
+       redirect_to("/")
+    end
+  end
+
+  def gerst_login_check
+        @player = Player.new(name: params[:name])
+        if @player.save
+          session[:user_id] = @player.id
+          WAIT[:join] += 1
+          redirect_to("/wait_area")
+        else
+          render("gerst_login")
+        end
+  end
+
+  def wait_area
+     @wait = "#{WAIT[:player]},#{WAIT[:join]}"
+     @host_player = Player.all.sort[0]
+     @WAIT = WAIT[:set]
+  end
+
+  def wait_area_check
+    if  WAIT[:player] == WAIT[:join] && WAIT[:set] == true
+      redirect_to("/game_start/#{session[:user_id]}")
     else
-      render("top")
+      render("wait_area")
     end
   end
 
@@ -88,7 +115,7 @@ class HomeController < ApplicationController
     Turn.create(player: PLAYERS[:user_id].size.to_i,turn_player_id: PLAYERS[:user_id][0].to_i)
     # 仮のdbを複製する
     Backup()
-  #  DeckHold.all.each{|i| i.delete}
-  #  DeckHold.create(deck:Deck.last.deck)
+    WAIT[:set] = true
+    redirect_to("/wait_area")
   end
 end

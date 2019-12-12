@@ -1,5 +1,4 @@
-
-<%= form_tag("/host_login") do %>
+<%= form_tag("/gerst_login") do %>
     <% @player.errors.full_messages.each do |message| %>
           <div class="form-error">
               <%= message %>
@@ -7,8 +6,5 @@
     <% end %>
     <p>ニックネーム入力</p>
     <input type="text" name="name" value="">
-    <p>パスワード</p>
-    <input type="text" name="password" value="">
-    <input type="submit" name="" value="ログイン">
+    <input type="submit" name="" value="登録">
 <% end %>
-<%= @time%>

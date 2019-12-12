@@ -2,9 +2,11 @@ Rails.application.routes.draw do
   get '/' => 'home#top'
   get '/host_login' => 'home#host_login'
   post '/host_login' => 'home#host_login_check'
+
   get '/setting' => 'home#setting'
   post '/setting' => 'home#setting_player'
-  post '/gerst_login' => 'home#gerst_login'
+  get '/gerst_login' => 'home#gerst_login'
+  post '/gerst_login' => 'home#gerst_login_check'
   get '/wait_area' => 'home#wait_area'
   post '/wait_area' => 'home#wait_area_check'
   post '/board_set' => 'home#board_set'

@@ -3,8 +3,8 @@
     <input type="submit" name="" value="ゲームスタート">
 <% end %>
 
-
-
-  <%= form_tag("/board_set") do %>
-      <input type="submit" name="" value="ボードセット">
-  <% end %>
+<% if @host_player.id == session[:user_id] && @WAIT == false %>
+    <%= form_tag("/board_set") do %>
+        <input type="submit" name="" value="ボードセット">
+    <% end %>
+<% end %>
