@@ -29,13 +29,21 @@
           <% end %>
 
           <%= form_tag("/confirm",remote: true) do %>
-              <input type="submit" class="btn-item" id="confirm_btn" name="confirm" disabled="true" value="確定">
+              <input type="submit" class="btn-item" id="confirm_btn" name="confirm" disabled="true" value="確定" onclick="timerStop()">
           <% end %>
 
           <%= form_tag("/judge/#{@boardlogs.size}",remote: true) do %>
-              <input type="submit" class="btn-item" id="judge_btn" name="judge" value="判定">
+              <input type="submit" class="btn-item" id="judge_btn" name="judge" value="判定" onclick="timerRestart()">
           <% end %>
 
+          <%= form_tag("/timeout") do %>
+              <input type="submit" class="btn-item" id="timeout_btn" name="timeout" value="タイムアウト" >
+          <% end %>
+
+          <div class="container--move">
+              <div id="timer">120</div>
+                  <%= javascript_include_tag "timekeep.js" %>
+          </div>
       <% else %>
           <%= form_tag("/aggregate",remote: true) do %>
               <input type="submit" class="btn-item" id="maru_btn" name="aggregate" value="●" >
@@ -59,13 +67,4 @@
       <%= render 'game/hand', player: @current_player %>
     </div>
 
-    <div class="container--move">
-        <div id="timer" > 60.000 </div>
-        <div class="controls">
-            <div class="btn start-btn" id="start">start</div>
-            <div class="btn" id="stop">stop</div>
-            <div class="btn" id="reset">reset</div>
-            <%= javascript_include_tag "main.js" %>
-        </div>
-    </div>
 </div>

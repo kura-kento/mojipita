@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   post '/action_step2/:height/:width' => 'game#action_step2'
   post '/draw/:loglast_id' => 'game#draw'
   post '/judge/:loglast_id' => 'game#judge'
-
+ post '/timeout' => 'game#timeout'
   post '/aggregate' => 'game#aggregate'
   post '/confirm' => 'game#confirm'
   post '/page_update' => 'game#page_update'

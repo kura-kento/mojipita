@@ -169,4 +169,26 @@ class GameController < ApplicationController
     end
   end
 
+  def timeout
+    if Turn.last.confirm == false
+      Rollback()
+      @current_player = Player.find_by(id: session[:user_id])
+      @current_player.word,@current_player.position = nil, nil
+      @current_player.save
+      Boardlog.where(confirm:false).each{|i| i.delete}
+    end
+    deck = Deck.last
+    @current_player.hand << deck.deck[0]
+    @current_player.save
+    deck.deck.slice!(0)
+    deck.save
+    #ホールドに再登録
+    Backup()
+    PLAYERS[:user_id].push(PLAYERS[:user_id].shift)
+    #最終的にターンプレイヤが変わったらページを切り替える
+    Turn.create(turn_player_id: PLAYERS[:user_id][0] ,player: Turn.last.player,count: Turn.last.count+1)
+
+    redirect_to("/game_start/#{session[:user_id]}")
+  end
+
 end

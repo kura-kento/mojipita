@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   #確定
   MOJI = {moji: 'あいいいいううううえおかかききくくけここささしししすすせそたたちちつつてととなにぬねのはひふへほまみむめもやゆゆよららりりるるれろわんんんんーー'}
   #BOARD_ACTION = {name: false,position: false}
-  PLAYERS = {user_id: [122]}
+  PLAYERS = {user_id: [128]}
   #削除予定
   WAIT = {player: 0,join: 0,set:false}
   HOLD ={id: false}
